@@ -1,5 +1,18 @@
 workflows:
-    sample-workflow:
-        name: Codemagic Sample Workflow
-        max_build_duration: 120
-        instance_type: mac_mini_m2
+  app_preview:
+    name: app_preview
+    environment: ...
+    triggering: ...
+    scripts: ...
+    artifacts:
+      - build/**/outputs/apk/**/*.apk
+      - build/ios/ipa/*.ipa
+      - build/macos/Build/Products/Release/*.app
+    publishing:
+      scripts:
+        - name: Post App Preview
+          script: |
+            dart pub global activate codemagic_app_preview
+            app_preview post \
+             --github_token $GITHUB_PAT \
+             --codemagic_token $CODEMAGIC_TOKEN
